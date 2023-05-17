@@ -84,11 +84,9 @@ class MainActivity : AppCompatActivity() {
             .setOnClickListener {
                 Log.d("BUTTONS", "User tapped the Leave button")
                 call.leave {
-                    if (it.isError) {
-                        Log.e(TAG, "Got error while leaving call: ${it.error?.msg}")
-                    } else {
-                        Log.d(TAG, "Successfully left all")
-                    }
+                    it.error?.apply {
+                        Log.e(TAG, "Got error while leaving call: $msg")
+                    } ?: Log.d(TAG, "Successfully left call")
                 }
             }
 
