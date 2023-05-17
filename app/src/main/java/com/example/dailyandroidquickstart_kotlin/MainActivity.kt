@@ -87,7 +87,7 @@ class MainActivity : AppCompatActivity() {
                     if (it.isError) {
                         Log.e(TAG, "Got error while leaving call: ${it.error}")
                     } else {
-                        Log.d(TAG, "Call has been left")
+                        Log.d(TAG, "Successfully left all")
                     }
                 }
             }
