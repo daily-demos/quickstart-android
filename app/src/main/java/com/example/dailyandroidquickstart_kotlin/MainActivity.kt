@@ -85,7 +85,7 @@ class MainActivity : AppCompatActivity() {
                 Log.d("BUTTONS", "User tapped the Leave button")
                 call.leave {
                     if (it.isError) {
-                        Log.e(TAG, "Got error while leaving call: ${it.error}")
+                        Log.e(TAG, "Got error while leaving call: ${it.error?.msg}")
                     } else {
                         Log.d(TAG, "Successfully left all")
                     }
