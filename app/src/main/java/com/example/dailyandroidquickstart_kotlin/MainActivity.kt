@@ -54,16 +54,13 @@ class MainActivity : AppCompatActivity() {
         // Create map of video views
         val videoViews = mutableMapOf<ParticipantId, VideoView>()
 
+        val layout = findViewById<LinearLayout>(R.id.videoLinearLayout)
+
         // Listen for events
         call.addListener(object : CallClientListener {
-
             // Handle a remote participant joining
             override fun onParticipantJoined(participant: Participant) {
-                val layout = findViewById<LinearLayout>(R.id.videoLinearLayout)
-
-
                 val participantView = layoutInflater.inflate(R.layout.participant_view, layout, false)
-
                 val videoView = participantView.findViewById<VideoView>(R.id.participant_video)
                 videoView.track = participant.media?.camera?.track
                 videoViews[participant.id] = videoView
@@ -81,15 +78,15 @@ class MainActivity : AppCompatActivity() {
                 toggleCamera.isChecked = inputSettings.camera.isEnabled
                 toggleMicrophone.isChecked = inputSettings.microphone.isEnabled
             }
-
-
         })
 
         findViewById<Button>(R.id.leave)
             .setOnClickListener {
                 Log.d("BUTTONS", "User tapped the Leave button")
                 call.leave {
-                    Log.d("Call", "Call has been left")
+                    it.error?.apply {
+                        Log.e(TAG, "Got error while leaving call: $msg")
+                    } ?: Log.d(TAG, "Successfully left call")
                 }
             }
 
@@ -114,11 +111,10 @@ class MainActivity : AppCompatActivity() {
                 toggleMicrophone.isChecked = call.inputs().microphone.isEnabled
             }
         }
-
     }
 
     private fun checkPermissions() {
-        //check permissions have been granted and if not, ask for permissions
+        // Check whether permissions have been granted and if not, ask for permissions
         val appContext: Context = applicationContext
 
         val permissionList: Array<String> = appContext.packageManager.getPackageInfo(
@@ -140,7 +136,5 @@ class MainActivity : AppCompatActivity() {
             // permission is granted, we can initialize
             initializeCallClient()
         }
-
     }
-
 }
